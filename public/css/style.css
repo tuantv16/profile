@@ -1,0 +1,12 @@
+.navbar {
+    display: flex;
+    justify-content: right;
+}
+.navbar h4 {
+    margin-right: 10px;
+}
+
+.page_administrators {
+    display: flex;
+    justify-content: right;
+}
