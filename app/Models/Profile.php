@@ -17,7 +17,7 @@ class Profile extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'title', 'description', 'mime', 'original_filename', 'filename', 'user_id', 'slug', 'created_at', 'updated_at', 'del_flag'
+        'title', 'description', 'mime', 'original_filename', 'filename', 'user_id', 'slug', 'security', 'created_at', 'updated_at', 'del_flag'
     ];
 
     /**

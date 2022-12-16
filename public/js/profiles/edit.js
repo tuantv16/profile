@@ -4,6 +4,7 @@ $(document).ready(function(){
         $("#profileImage").change(function () {
                 var imgControlName = "#imgFileUpload";
                 readURL(this, imgControlName);
+                $("#flag_del_image").val("");
         });
 
         function readURL(input, imgControlName) {
@@ -25,7 +26,7 @@ $(document).ready(function(){
         $("#removeImage").click(function () {
             let image_default = $("#image_default").val();
             $("#imgFileUpload").attr("src", image_default);
-
+            $("#flag_del_image").val(1);
         });
         
             

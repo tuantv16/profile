@@ -7,8 +7,9 @@
 @stop
  
 @section('content')
-    <form class="file-upload" action="" method="POST" enctype="multipart/form-data">
-
+    <form class="file-upload" action="{{asset('/admin/update')}}" method="POST" enctype="multipart/form-data">
+        <input type="hidden" class="form-control" name="id" placeholder="" value="{{ $data['profiles_id'] }}">
+        <input type="hidden" class="form-control" name="flag_del_image" id="flag_del_image" placeholder="" value="">
         @if ( Session::has('error') )
     	<div class="alert alert-danger alert-dismissible" role="alert">
     		<strong>{{ Session::get('error') }}</strong>
@@ -54,6 +55,11 @@
                         <div class="col-md-12">
                             <label class="form-label">Slug</label>
                             <input type="text" class="form-control" name="slug" placeholder="" aria-label="First name" value="{{ $data['slug'] }}">
+                        </div>
+
+                        <div class="col-md-12">
+                            <input type="checkbox" id="security" name="security" value="1" {{ isset($data['security']) && $data['security'] == 1 ? 'checked' : '' }}>
+                            <label for="security"> Bảo mật</label><br>
                         </div>
                     </div> <!-- Row END -->
                 </div>

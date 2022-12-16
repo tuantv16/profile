@@ -22,6 +22,7 @@ class CreateProfilesTable extends Migration
             $table->string('filename', 255);
             $table->integer('user_id');
             $table->string('slug', 255);
+            $table->integer('security');
             $table->timestamps();
             $table->integer('del_flag');
         });

@@ -46,6 +46,7 @@ Route::prefix('admin')->group(function () {
 
     Route::post('/add', [MainController::class, 'add']);
     Route::get('/edit/{profileId}', [MainController::class, 'edit']);
+    Route::post('/update', [MainController::class, 'update']);
 });
 
 //Route::get('/admin', [MainController::class, 'index']);
