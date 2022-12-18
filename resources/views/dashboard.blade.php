@@ -11,10 +11,13 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/all.min.css" integrity="sha256-2XFplPlrFClt0bIdPgpz8H7ojnk10H69xRqd9+uTShA=" crossorigin="anonymous" />
 		<link rel="stylesheet"  href="{{ asset('/css/dashboard.css') }}">
 		<link rel="stylesheet"  href="{{ asset('/css/style.css') }}">
+        <script src="{{ asset('js/jquery361.min.js') }}"></script>
+        <script src="{{ asset('js/dashboard.js') }}"></script>
+
     </head>
 
 <body>
-   
+
 <div class="container">
 <div class="row">
 		<div class="col-12">
@@ -27,9 +30,29 @@
 			<div class="page_administrators">
 				<a href="/admin"> >> Trang quản trị</a>
 			</div>
-			
+
+            <nav>
+                <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                    @if (!empty($users))
+                        @foreach ($users as $member)
+                        {{-- <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Home</button>
+                        <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Profile</button>
+                        <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Contact</button> --}}
+                        <button data-user_id="{{$member['id']}}" class="member nav-link {{ isset($_GET['member']) && $member['id'] == $_GET['member']  ? 'active' : ''}}" id="nav-home{{$member['id'] }}-tab" data-bs-toggle="tab" data-bs-target="#nav-home{{$member['id'] }}" type="button" role="tab" aria-controls="nav-home{{$member['id'] }}" aria-selected="true">{{$member['fullname']}}</button>
+                        @endforeach
+                    @endif
+                </div>
+              </nav>
+              <div class="tab-content" id="nav-tabContent">
+                @if (!empty($dataProfiles))
+                    @foreach ($dataProfiles as $profile)
+                        {{$profile['title'].'<br/>'}}
+                    @endforeach
+                @endif
+              </div>
+
 			<!-- Form START -->
-			<form class="file-upload">
+			<form class="file-upload" style="display: none">
 				<div class="row mb-5 gx-5">
 					<!-- Contact detail -->
 					<div class="col-xxl-8 mb-5 mb-xxl-0">
@@ -91,75 +114,7 @@
 					</div>
 				</div> <!-- Row END -->
 
-				<!-- Social media detail -->
-				<div class="row mb-5 gx-5">
-					<div class="col-xxl-6 mb-5 mb-xxl-0">
-						<div class="bg-secondary-soft px-4 py-5 rounded">
-							<div class="row g-3">
-								<h4 class="mb-4 mt-0">Social media detail</h4>
-								<!-- Facebook -->
-								<div class="col-md-6">
-									<label class="form-label"><i class="fab fa-fw fa-facebook me-2 text-facebook"></i>Facebook *</label>
-									<input type="text" class="form-control" placeholder="" aria-label="Facebook" value="http://www.facebook.com">
-								</div>
-								<!-- Twitter -->
-								<div class="col-md-6">
-									<label class="form-label"><i class="fab fa-fw fa-twitter text-twitter me-2"></i>Twitter *</label>
-									<input type="text" class="form-control" placeholder="" aria-label="Twitter" value="http://www.twitter.com">
-								</div>
-								<!-- Linkedin -->
-								<div class="col-md-6">
-									<label class="form-label"><i class="fab fa-fw fa-linkedin-in text-linkedin me-2"></i>Linkedin *</label>
-									<input type="text" class="form-control" placeholder="" aria-label="Linkedin" value="http://www.linkedin.com">
-								</div>
-								<!-- Instragram -->
-								<div class="col-md-6">
-									<label class="form-label"><i class="fab fa-fw fa-instagram text-instagram me-2"></i>Instagram *</label>
-									<input type="text" class="form-control" placeholder="" aria-label="Instragram" value="http://www.instragram.com">
-								</div>
-								<!-- Dribble -->
-								<div class="col-md-6">
-									<label class="form-label"><i class="fas fa-fw fa-basketball-ball text-dribbble me-2"></i>Dribble *</label>
-									<input type="text" class="form-control" placeholder="" aria-label="Dribble" value="http://www.dribble.com">
-								</div>
-								<!-- Pinterest -->
-								<div class="col-md-6">
-									<label class="form-label"><i class="fab fa-fw fa-pinterest text-pinterest"></i>Pinterest *</label>
-									<input type="text" class="form-control" placeholder="" aria-label="Pinterest" value="http://www.pinterest.com">
-								</div>
-							</div> <!-- Row END -->
-						</div>
-					</div>
 
-					<!-- change password -->
-					<div class="col-xxl-6">
-						<div class="bg-secondary-soft px-4 py-5 rounded">
-							<div class="row g-3">
-								<h4 class="my-4">Change Password</h4>
-								<!-- Old password -->
-								<div class="col-md-6">
-									<label for="exampleInputPassword1" class="form-label">Old password *</label>
-									<input type="password" class="form-control" id="exampleInputPassword1">
-								</div>
-								<!-- New password -->
-								<div class="col-md-6">
-									<label for="exampleInputPassword2" class="form-label">New password *</label>
-									<input type="password" class="form-control" id="exampleInputPassword2">
-								</div>
-								<!-- Confirm password -->
-								<div class="col-md-12">
-									<label for="exampleInputPassword3" class="form-label">Confirm Password *</label>
-									<input type="password" class="form-control" id="exampleInputPassword3">
-								</div>
-							</div>
-						</div>
-					</div>
-				</div> <!-- Row END -->
-				<!-- button -->
-				<div class="gap-3 d-md-flex justify-content-md-end text-center">
-					<button type="button" class="btn btn-danger btn-lg">Delete profile</button>
-					<button type="button" class="btn btn-primary btn-lg">Update profile</button>
-				</div>
 			</form> <!-- Form END -->
 		</div>
 	</div>

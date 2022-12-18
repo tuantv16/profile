@@ -12,9 +12,11 @@ use Session;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 use App\Models\Profile;
+use App\Models\User;
+
 class MainController extends Controller
 {
- 
+
     /**
      * Where to redirect users after login.
      *
@@ -31,39 +33,68 @@ class MainController extends Controller
         $this->middleware('auth');
     }
 
-    public function index() {
+    public function index(Request $request) {
         //$data = Profile::all()->toArray();
+        $params = $request->all();
+        //  var_dump($params);
+        //  die('dfsdf');
 
-        $data = DB::table('profiles')
-        ->select(
-            'users.id as user_id', 
-            'profiles.id as profiles_id', 
-            'users.name as name', 
-            'profiles.title', 
-            'profiles.description', 
-            'profiles.slug', 
-            'profiles.created_at', 
-            'profiles.updated_at', 
+        // Query DB by Query builder
+        // $data = DB::table('profiles')
+        // ->select(
+        //     'users.id as user_id',
+        //     'profiles.id as profiles_id',
+        //     'users.name as name',
+        //     'profiles.title',
+        //     'profiles.description',
+        //     'profiles.slug',
+        //     'profiles.created_at',
+        //     'profiles.updated_at',
+        //     'profiles.del_flag'
+        // )
+        // ->leftJoin('users', 'profiles.user_id', '=', 'users.id')
+        // ->where('profiles.del_flag',0)
+        // ->where('name', 'like', 'T%')
+        // //->orderBy('post.id','DESC')
+        // ->get();
+
+
+        $keyword = isset($params['keyword']) ? trim($params['keyword']) : '';
+        // Query DB by Eloquent
+        $data = Profile::leftJoin('users', function($join) {
+            $join->on('profiles.user_id', '=', 'users.id');
+          })
+          ->select(
+            'users.id as user_id',
+            'profiles.id as profiles_id',
+            'users.name as name',
+            'profiles.title',
+            'profiles.description',
+            'profiles.slug',
+            'profiles.created_at',
+            'profiles.updated_at',
             'profiles.del_flag'
-        )
-        ->leftJoin('users', 'profiles.user_id', '=', 'users.id')
-        ->where('profiles.del_flag',0)
-        //->orderBy('post.id','DESC')
-        ->get();
-        $data = $data->toArray();
-        $listProfiles = array_map(function($row) {
-            return (array) $row;
-        },$data);
-        
-        // echo '<pre>';
-        // var_dump($listProfiles);
-        // die('sfd2');
+          )
+          ->where('profiles.del_flag', 0)
+          //->where('profiles.user_id', '<>', 1)
+          ->where(function ($query) use ($keyword) {
+
+            $query->where('profiles.title', 'LIKE', '%'.$keyword.'%')
+                ->orWhere('profiles.description', 'LIKE', '%'.$keyword.'%')
+                ->orWhere('profiles.slug', 'LIKE', '%'.$keyword.'%');
+          })
+         ->get();
+          //->toSql();
+
         return view('backend.main', [
-            'listProfiles' => $listProfiles
+            'listProfiles' => $data
         ]);
     }
 
     public function add(Request $request , $id = '') {
+
+        // Lấy danh sách thông tin user
+        $users = User::all()->toArray();
         $method = $request->method();
         if ($request->isMethod('post')) {
             $now = new \DateTime();
@@ -80,14 +111,14 @@ class MainController extends Controller
             if ($validator->fails()) {
                 // Dữ liệu vào không thỏa điều kiện sẽ thông báo lỗi
                 return redirect('admin/add')->withErrors($validator)->withInput();
-            } else {  
+            } else {
                 $dataInserts = [];
                 $mime = $originalFilename = $filename = '';
                 if(!empty($request->file('profile_image'))) {   //nếu tồn tại chọn file ảnh
                     $infoImages = $request->file('profile_image');
                     $extension = $infoImages->getClientOriginalExtension();
                     $nameImage = $infoImages->getClientOriginalName();
-                   
+
                     Storage::disk('public')->put($infoImages->getFilename().'.'.$extension,  File::get($infoImages));
                     Storage::disk('public')->put($nameImage,  File::get($infoImages));
 
@@ -103,41 +134,43 @@ class MainController extends Controller
                     'filename'          => $filename,
                     'user_id'           => $request->user_id,
                     'slug'              => $request->slug,
-                    'security'          => $request->security,
+                    'security'          => !empty($request->security) ? $request->security : 0,
                     "created_at"        => $now,
                     "updated_at"        => $now,
                     "del_flag"           => 0
-                    
+
                 ];
                 $result = Profile::create($dataInserts);
-                
+
                 if ($result) {
                     $request->session()->flash('success', 'Cập nhật dữ liệu thành công!');
                     return redirect('admin');
                 }
             }
         } else {
-            return view('backend.profiles.add', []);
+            return view('backend.profiles.add', [
+                'users' => $users
+            ]);
         }
-        
-        
+
+
     }
 
     public function edit(Request $request , $profileId = '') {
         $data = DB::table('profiles')
         ->select(
-            'users.id as user_id', 
-            'profiles.id as profiles_id', 
-            'users.name as name', 
-            'profiles.title', 
-            'profiles.description', 
-            'profiles.mime', 
-            'profiles.original_filename', 
-            'profiles.filename', 
-            'profiles.slug', 
-            'profiles.security', 
-            'profiles.created_at', 
-            'profiles.updated_at', 
+            'users.id as user_id',
+            'profiles.id as profiles_id',
+            'users.name as name',
+            'profiles.title',
+            'profiles.description',
+            'profiles.mime',
+            'profiles.original_filename',
+            'profiles.filename',
+            'profiles.slug',
+            'profiles.security',
+            'profiles.created_at',
+            'profiles.updated_at',
             'profiles.del_flag'
         )
         ->leftJoin('users', 'profiles.user_id', '=', 'users.id')
@@ -152,9 +185,9 @@ class MainController extends Controller
             'data' => $data,
             'fileNameImage' => $fileNameImage
         ]);
-        
-        
-        
+
+
+
     }
 
     public function update(Request $request) {
@@ -174,7 +207,7 @@ class MainController extends Controller
             if ($validator->fails()) {
                 // Dữ liệu vào không thỏa điều kiện sẽ thông báo lỗi
                 return redirect('admin/edit')->withErrors($validator)->withInput();
-            } else {  
+            } else {
                 $dataUpdates = [
                     "title"               => $request->title,
                     "description"         => $request->description,
@@ -193,17 +226,17 @@ class MainController extends Controller
 
                     $dataUpdates['mime'] = $infoImages->getClientMimeType();
                     $dataUpdates['original_filename'] = $infoImages->getClientOriginalName();
-                    $dataUpdates['filename'] =  $infoImages->getFilename().'.'.$extension; 
+                    $dataUpdates['filename'] =  $infoImages->getFilename().'.'.$extension;
                 }
 
                 if ($delFlag == 1) { // trường hợp xóa ảnh
                     $dataUpdates['mime'] = '';
                     $dataUpdates['original_filename'] = '';
-                    $dataUpdates['filename'] =  ''; 
+                    $dataUpdates['filename'] =  '';
                 }
 
                 // đang làm chức năng xóa ảnh
-            
+
                 // echo '<pre>';
                 // var_dump($profileId);
                 // var_dump($dataUpdates);
@@ -211,7 +244,7 @@ class MainController extends Controller
                 $result = DB::table('profiles')
                 ->where("id", (int)$profileId)
                 ->update($dataUpdates);
-             
+
                 if ($result) {
                     $request->session()->flash('success', 'Cập nhật dữ liệu thành công!');
                     return redirect('admin');

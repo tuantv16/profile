@@ -1,7 +1,7 @@
 @extends('layouts.backend')
- 
+
 @section('title', 'Trang quản trị')
- 
+
 @section('content')
   <form class="file-upload">
         @if ( Session::has('success') )
@@ -34,10 +34,26 @@
                         <h4 class="mb-4 mt-0">Danh sách dữ liệu</h4>
                     </div> <!-- Row END -->
 
+                    <div class="container mb-4 mt-0">
+                        <form class="frm_search" action="" method="GET">
+                            <div class="row ">
+                                <div class="col">
+                                    {{-- <label class="form-label">Tìm kiếm theo từ khóa</label> --}}
+                                    <input type="text" class="form-control" name="keyword" value="<?php echo isset($_GET['keyword']) ? $_GET['keyword'] : '';?>" placeholder="Từ khóa tìm kiếm" >
+                                </div>
+                                <div class="col">
+                                    {{-- <label class="form-label">.</label> --}}
+                                    <input type="submit" class="btn btn-primary form-control" name="btnSearch" value="Tìm kiếm" style="width:100px">
+                                </div>
+                            </div>
+                        </form>
+                    </div> <!-- Row END -->
+
+
+
                     <div class="container mt-12">
-                        <a href="/admin/add" class="btn btn-primary btn-md">Thêm mới</a>
-                        <p>Ghi chú: ...</p>
-                        
+                        <a href="/admin/add" class="btn btn-primary btn-md mb-4">Thêm mới</a>
+
                         <div class="table-responsive">
                             <table class="table table-bordered" style="width:2000px">
                             <thead>
@@ -56,7 +72,7 @@
                             <tbody>
                                 @if (!empty($listProfiles))
                                     @foreach($listProfiles as $key => $row)
-                                    <?php 
+                                    <?php
 
                                     // echo '<pre>';
                                     // var_dump($listProfiles);
@@ -78,7 +94,7 @@
                                             <td>{{ date_format($createdAt,"d/m/Y H:i:s"); }}</td>
                                             <td>{{ date_format($updatedAt,"d/m/Y H:i:s"); }}</td>
                                             <td>{{ $row['del_flag'] == 0 ? 'Hiển thị' : 'Đã xóa' }}</td>
-                                    
+
                                         </tr>
                                     @endforeach
                                 @endif
@@ -90,6 +106,6 @@
                 </div>
             </div>
         </div> <!-- Row END -->
-    
+
     </form> <!-- Form END -->
 @stop

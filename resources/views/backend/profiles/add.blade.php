@@ -1,17 +1,17 @@
 @extends('layouts.backend')
- 
+
 @section('title', 'Thêm dữ liệu')
- 
+
 @section('javascript')
     <script src="{{ asset('js/profiles/add.js') }}"></script>
 @stop
 
 @section('sidebar')
     @@parent
- 
+
     <p>This is appended to the master sidebar.</p>
 @stop
- 
+
 @section('content')
     <form class="file-upload" action="" method="POST" enctype="multipart/form-data">
         @if ( Session::has('success') )
@@ -47,9 +47,11 @@
                         <div class="col-md-12">
                             <label class="form-label">Lựa chọn Người dùng</label>
                             <select class="form-control" name="user_id" style="width:200px">
-                                <option value="1">Trần Văn Tuấn</option>
-                                <option value="2">Lê Thị Thu Điệp</option>
-                                <option value="3">Trần Diệp Anh</option>
+                                @if (!empty($users))
+                                    @foreach($users as $row)
+                                        <option value="{{ $row['id']}}">{{ $row['fullname']}}</option>
+                                    @endforeach
+                                @endif
                             </select>
                         </div>
                         <div class="col-md-12">
@@ -83,11 +85,11 @@
                             <input type="hidden" id="image_default" value="{{ URL::asset("/uploads/icon-upload-default.png") }}" />
                             <!-- Image upload -->
                             <div class="square position-relative display-2 mb-3">
-                                <a href="#">  
+                                <a href="#">
                                     <img id="imgFileUpload" name="profile_pic" src="{{URL::asset("/uploads/icon-upload-default.png")}}" value=""
-                                     data-toggle="tooltip" data-placement="top" 
-                                     title="click to upload image" 
-                                     class="profile_pic rspimg shadow-sm bg-white rounded" 
+                                     data-toggle="tooltip" data-placement="top"
+                                     title="click to upload image"
+                                     class="profile_pic rspimg shadow-sm bg-white rounded"
                                      data-toggle="tooltip" data-placement="top" title="Click To Upload image" style="width: 100%" height="100%">
                                 </a>
                             </div>
@@ -108,6 +110,6 @@
             </div>
         </div> <!-- Row END -->
 
-      
+
     </form>
 @stop
