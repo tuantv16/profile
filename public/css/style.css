@@ -10,3 +10,21 @@
     display: flex;
     justify-content: right;
 }
+
+.box-flex {
+    display: flex;
+    max-height: 200px;
+    overflow: hidden;
+}
+.info-text {
+    width: 80% !important;
+}
+
+.info-image {
+    width: 20% !important;
+}
+
+.profile_pic {
+    /* width: 80% !important;
+    max-width: 80% !important; */
+}

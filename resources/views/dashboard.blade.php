@@ -44,11 +44,40 @@
                 </div>
               </nav>
               <div class="tab-content" id="nav-tabContent">
-                @if (!empty($dataProfiles))
-                    @foreach ($dataProfiles as $profile)
-                        {{$profile['title'].'<br/>'}}
-                    @endforeach
-                @endif
+                <div class="container-fluid">
+                    <div class="row" style="margin-top: 15px">
+                        @if (!empty($dataProfiles))
+                            @foreach ($dataProfiles as $profile)
+
+                                    <div class="col-lg-6">
+                                        <div class="box-flex">
+                                            <div class="info-text">
+                                                <h5> {{$profile['title']}} </h5>
+                                                <p> {{$profile['description'] }}</p>
+                                            </div>
+                                            <div class="info-image">
+                                                <?php
+                                                    $images = URL::asset("/uploads/icon-upload-default.png");
+                                                    if (!empty($profile["original_filename"])) {
+                                                        $images = asset('profile_uploads/'.$profile["original_filename"]);
+                                                    }
+                                                ?>
+                                                    <a href="#">
+                                                        <img id="imgFileUpload" name="profile_pic" src="{{ $images }}" value=""
+                                                        data-toggle="tooltip" data-placement="top"
+                                                        title="click to upload image"
+                                                        class="profile_pic rspimg shadow-sm bg-white rounded"
+                                                        data-toggle="tooltip" data-placement="top" title="Click To Upload image" style="width: 80%" height="80%">
+                                                    </a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                            @endforeach
+                        @endif
+                    </div>
+                </div>
               </div>
 
 			<!-- Form START -->
