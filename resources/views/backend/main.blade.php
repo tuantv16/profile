@@ -2,6 +2,10 @@
 
 @section('title', 'Trang quản trị')
 
+@section('javascript')
+    <script src="{{ asset('js/main.js') }}"></script>
+@stop
+
 @section('content')
   <form class="file-upload">
         @if ( Session::has('success') )
@@ -43,7 +47,7 @@
                                 </div>
                                 <div class="col">
                                     {{-- <label class="form-label">.</label> --}}
-                                    <input type="submit" class="btn btn-primary form-control" name="btnSearch" value="Tìm kiếm" style="width:100px">
+                                    <input type="submit" class="btn btn-primary form-control" name="keysearch" value="Tìm kiếm" style="width:100px">
                                 </div>
                             </div>
                         </form>
@@ -59,7 +63,7 @@
                             <thead>
                                 <tr>
                                     <th></th>
-                                    <th>STT</th>
+                                    <th>ID</th>
                                     <th>Người dùng</th>
                                     <th style="width:300px">Tiêu đề</th>
                                     <th style="width:500px">Mô tả</th>
@@ -67,6 +71,7 @@
                                     <th>Ngày tạo</th>
                                     <th>Ngày cập nhật</th>
                                     <th>Trạng thái</th>
+                                    <th>Thao tác</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -86,7 +91,7 @@
                                                 <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
                                                 <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
                                               </svg></a></td>
-                                            <td>{{ $key + 1  }}</td>
+                                            <td>{{ $id  }}</td>
                                             <td>{{ $row['name'] }}</td>
                                             <td>{{ $row['title'] }}</td>
                                             <td>{{ substr($row['description'],0,255) }} </td>
@@ -94,7 +99,9 @@
                                             <td>{{ date_format($createdAt,"d/m/Y H:i:s"); }}</td>
                                             <td>{{ date_format($updatedAt,"d/m/Y H:i:s"); }}</td>
                                             <td>{{ $row['del_flag'] == 0 ? 'Hiển thị' : 'Đã xóa' }}</td>
-
+                                            <td class="text-center"><a class="item-del" url="{{ asset("admin/del/$id") }}" href="javascript(0)" ><span class="material-symbols-outlined">
+                                                delete
+                                                </span></a></td>
                                         </tr>
                                     @endforeach
                                 @endif

@@ -15,16 +15,79 @@
     display: flex;
     max-height: 200px;
     overflow: hidden;
+    min-height: 120px;
 }
+
 .info-text {
     width: 80% !important;
+    position: relative;
+    font-size: 16px;
+}
+
+.box-proccess {
+    position: absolute;
+    right: 20px;
 }
 
 .info-image {
     width: 20% !important;
 }
 
+/* .image-detail {
+    max-width: 120px;
+    width: 120px;
+} */
+
 .profile_pic {
     /* width: 80% !important;
     max-width: 80% !important; */
+}
+
+.d-none {
+    display: none;
+}
+
+.content_hidden {
+    max-width: 450px;
+}
+.content_hidden ul{
+    padding: 0;
+}
+
+.content_hidden ul li{
+    list-style: none;
+}
+
+.selection {
+    display: none !important;
+}
+
+
+/* .box-item {
+    
+}
+
+.box-flex {
+    border: 1px solid grey;
+    padding: 5px;
+} */
+
+.wrap-layout {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+.wrap-layout__item {
+    border: 1px solid #ced4da;
+    font-size: 68px;
+    font-weight: bold;
+    /* text-align: center; */
+    padding: 15px 20px; 
+    min-width: 39vw;
+    min-height: 152px;
+    /* line-height: 153px; */
+    margin: 10px;
+
+    display: flex;
 }

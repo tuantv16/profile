@@ -34,31 +34,11 @@ class MainController extends Controller
     }
 
     public function index(Request $request) {
-        //$data = Profile::all()->toArray();
+       
         $params = $request->all();
-        //  var_dump($params);
-        //  die('dfsdf');
-
-        // Query DB by Query builder
-        // $data = DB::table('profiles')
-        // ->select(
-        //     'users.id as user_id',
-        //     'profiles.id as profiles_id',
-        //     'users.name as name',
-        //     'profiles.title',
-        //     'profiles.description',
-        //     'profiles.slug',
-        //     'profiles.created_at',
-        //     'profiles.updated_at',
-        //     'profiles.del_flag'
-        // )
-        // ->leftJoin('users', 'profiles.user_id', '=', 'users.id')
-        // ->where('profiles.del_flag',0)
-        // ->where('name', 'like', 'T%')
-        // //->orderBy('post.id','DESC')
-        // ->get();
-
-
+        if (Auth::user()->id != 1) {
+            return redirect('/');
+        }
         $keyword = isset($params['keyword']) ? trim($params['keyword']) : '';
         // Query DB by Eloquent
         $data = Profile::leftJoin('users', function($join) {
@@ -78,7 +58,6 @@ class MainController extends Controller
           ->where('profiles.del_flag', 0)
           //->where('profiles.user_id', '<>', 1)
           ->where(function ($query) use ($keyword) {
-
             $query->where('profiles.title', 'LIKE', '%'.$keyword.'%')
                 ->orWhere('profiles.description', 'LIKE', '%'.$keyword.'%')
                 ->orWhere('profiles.slug', 'LIKE', '%'.$keyword.'%');
@@ -100,8 +79,8 @@ class MainController extends Controller
             $now = new \DateTime();
             $messages = [
                 'image' => 'Định dạng không cho phép',
-                'max' => 'Kích thước file quá lớn',
-                'mimes' => 'Định dạng file không đúng (file phải có phần mở rộng là jpeg,png,jpg,gif,svg)'
+                'max' => 'Kích thước file ảnh quá lớn',
+                'mimes' => 'Định dạng file ảnh không đúng (file phải có phần mở rộng là jpeg,png,jpg,gif,svg)'
             ];
 
             $validator = Validator::make($request->all(), [ // <---
@@ -152,8 +131,6 @@ class MainController extends Controller
                 'users' => $users
             ]);
         }
-
-
     }
 
     public function edit(Request $request , $profileId = '') {
@@ -196,8 +173,8 @@ class MainController extends Controller
             $curTime = new \DateTime();
             $messages = [
                 'image' => 'Định dạng không cho phép',
-                'max' => 'Kích thước file quá lớn',
-                'mimes' => 'Định dạng file không đúng (file phải có phần mở rộng là jpeg,png,jpg,gif,svg)'
+                'max' => 'Kích thước file ảnh quá lớn',
+                'mimes' => 'Định dạng file ảnh không đúng (file phải có phần mở rộng là jpeg,png,jpg,gif,svg)'
             ];
 
             $validator = Validator::make($request->all(), [ // <---
@@ -206,16 +183,21 @@ class MainController extends Controller
 
             if ($validator->fails()) {
                 // Dữ liệu vào không thỏa điều kiện sẽ thông báo lỗi
-                return redirect('admin/edit')->withErrors($validator)->withInput();
+                return redirect('admin/edit/'.$profileId)->withErrors($validator)->withInput();
             } else {
                 $dataUpdates = [
                     "title"               => $request->title,
                     "description"         => $request->description,
                     "slug"                => $request->slug,
-                    //"updated_at"          => $curTime,
-                    'security'             => !empty($request->security) ? 1 : 0,
+                    "updated_at"          => $curTime,
                 ];
 
+                $dataUpdates['security'] = 0;
+                if (!empty($request->security)) {
+                    if ((int)$request->security > 0) {
+                        $dataUpdates['security'] = 1;
+                    }
+                }
                 $delFlag = $request->flag_del_image;
                 if(!empty($request->file('profile_image'))) {   //nếu tồn tại chọn file ảnh
                     $infoImages = $request->file('profile_image');
@@ -254,6 +236,12 @@ class MainController extends Controller
                 }
             }
         }
+    }
+
+
+    public function del(Request $request, $profileId) {
+        $blog = DB::table('profiles')->where('id', (int)$profileId)->delete();
+        return redirect('admin');
     }
 
 }

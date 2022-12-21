@@ -58,7 +58,6 @@ class LoginController extends Controller
     	];
     	$validator = Validator::make($request->all(), $rules, $messages);
     
-		
     	if ($validator->fails()) {
     		// Điều kiện dữ liệu không hợp lệ sẽ chuyển về trang đăng nhập và thông báo lỗi
     		return redirect('login')->withErrors($validator)->withInput();

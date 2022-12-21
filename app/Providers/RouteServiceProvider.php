@@ -17,8 +17,9 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @var string
      */
-    public const HOME = '/home';
-
+    //public const HOME = '/home'; // trường hợp chưa login sẽ redirect đến trang home
+    public const HOME = '/'; // tuantv update
+    
     /**
      * Define your route model bindings, pattern filters, etc.
      *

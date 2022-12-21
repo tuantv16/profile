@@ -95,7 +95,7 @@
 
                             <button type="button" class="btn btn-danger-soft" id="removeImage">Remove</button>
                             <!-- Content -->
-                            <p class="text-muted mt-3 mb-0"><span class="me-1">Note:</span>Minimum size 300px x 300px</p>
+                            <p class="text-muted mt-3 mb-0"><span class="me-1">Lưu ý:</span>Kích cỡ tối đa 2048KB ~ 2MB</p>
                         </div>
                     </div>
                 </div>
